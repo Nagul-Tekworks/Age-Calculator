@@ -4,8 +4,12 @@ from datetime import date
 # Title
 st.title("🎉 Age Calculator App")
 
-# Input - Date picker for birthdate
-birth_date = st.date_input("Select your date of birth:")
+# Date input with min & max values
+birth_date = st.date_input(
+    "Select your date of birth:",
+    min_value=date(1900, 1, 1),   # earliest allowed date
+    max_value=date.today()        # today's date as the latest
+)
 
 # Button to calculate
 if st.button("Calculate Age"):
