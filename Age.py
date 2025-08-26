@@ -1,23 +1,37 @@
 import streamlit as st
 from datetime import date
+from dateutil.relativedelta import relativedelta
+
+st.set_page_config(page_title="Age Calculator", page_icon="🎉", layout="centered")
 
 # Title
-st.title("🎉 Age Calculator App")
+st.title("🎉 Advanced Age Calculator")
 
-# Date input with min & max values
+# Start Date (Birthdate)
 birth_date = st.date_input(
-    "Select your date of birth:",
-    min_value=date(1900, 1, 1),   # earliest allowed date
-    max_value=date.today()        # today's date as the latest
+    "Select your Date of Birth:",
+    min_value=date(1900, 1, 1),
+    max_value=date.today(),
+    format="DD-MM-YYYY"   # 👈 date format
 )
 
-# Button to calculate
+# End Date (default = today)
+end_date = st.date_input(
+    "Select End Date (default: Today):",
+    value=date.today(),
+    min_value=birth_date,
+    max_value=date.today(),
+    format="DD-MM-YYYY"
+)
+
+# Button
 if st.button("Calculate Age"):
-    today = date.today()
-    age = today.year - birth_date.year
+    if end_date < birth_date:
+        st.error("⚠️ End date must be after birth date!")
+    else:
+        diff = relativedelta(end_date, birth_date)
+        years, months, days = diff.years, diff.months, diff.days
 
-    # Adjust if birthday hasn't occurred yet this year
-    if (today.month, today.day) < (birth_date.month, birth_date.day):
-        age -= 1
-
-    st.success(f"✨ Your age is: {age} years")
+        st.success(
+            f"✨ Your age is: **{years} years, {months} months, {days} days**"
+        )
